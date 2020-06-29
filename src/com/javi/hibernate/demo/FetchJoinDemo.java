@@ -3,13 +3,14 @@ package com.javi.hibernate.demo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import com.javi.hibernate.demo.entity.Course;
 import com.javi.hibernate.demo.entity.Instructor;
 import com.javi.hibernate.demo.entity.InstructorDetail;
 import com.javi.hibernate.demo.entity.Student;
 
-public class EagerLazyDemo {
+public class FetchJoinDemo {
 
 	public static void main(String[] args) {
 		
@@ -29,17 +30,25 @@ public class EagerLazyDemo {
 			// start a transaction
 			session.beginTransaction();
 			
+			//Option 2: Hibernate query with HQL
+			
 			// get the instructor from db
 			int theId = 1;
-			Instructor tempInstructor = session.get(Instructor.class,  theId);
+			
+			//When executed, will load instructor and courses all at once
+			Query<Instructor> query =
+					session.createQuery("select i from Instructor i " 
+								+ "JOIN FETCH i.courses "
+								+ "where i.id=:theInstructorId", 
+							Instructor.class );
+			
+			// set parameter on query
+			query.setParameter("theInstructorId", theId);
+			
+			//execute query and get instructor
+			Instructor tempInstructor = query.getSingleResult();//Load instructor and courses all at once
 			
 			System.out.println("luv2code: Instructor: " + tempInstructor);
-			
-			
-			//Option 1: call getter method while session is open
-			// get courses for the instructor
-			
-			System.out.println("luv2code: Courses: " + tempInstructor.getCourses());//Lazy fetch. Courses only loaded on demand
 			
 			
 			// commit transaction
@@ -50,9 +59,7 @@ public class EagerLazyDemo {
 			
 			System.out.println("\nluv2code: The session is now closed!\n");
 			
-			// since courses are lazy loaded ... this should fail
-			
-			
+		
 			
 			// get courses for the instructor
 			
