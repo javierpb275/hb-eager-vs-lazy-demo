@@ -45,7 +45,7 @@ public class Instructor {
 		
 		//**set up relationship/mapping between Instructor and List<Course>
 		
-		@OneToMany(fetch=FetchType.EAGER, //This will load the instructor and the courses at the same time
+		@OneToMany(fetch=FetchType.LAZY, //EAGER will load the instructor and the courses at the same time. LAZY only load the courses on demand
 				 	mappedBy="instructor",//Refers to "instructor" property in "Course" class
 					cascade= {CascadeType.PERSIST, CascadeType.MERGE, //do NOT apply cascading DELETES (REMOVE)
 							  CascadeType.DETACH, CascadeType.REFRESH})

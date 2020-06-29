@@ -37,7 +37,7 @@ public class EagerLazyDemo {
 			
 			// get courses for the instructor
 			
-			System.out.println("luv2code: Courses: " + tempInstructor.getCourses());
+			System.out.println("luv2code: Courses: " + tempInstructor.getCourses());//Lazy fetch. Courses only loaded on demand
 			
 			
 			// commit transaction
